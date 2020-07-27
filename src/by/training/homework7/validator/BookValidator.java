@@ -27,8 +27,12 @@ public class BookValidator {
         }
         boolean result = true;
         switch (tag) {
+            case ID:
+                if (Integer.parseInt(data) < 0) {
+                    result = false;
+                }
+                break;
             case TITLE:
-
                 if (!validateTitle(data)) {
                     result = false;
                 }

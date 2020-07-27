@@ -113,15 +113,17 @@ public class BookValidatorTest {
 
     @Test
     public void validateBookTestValid() {
-        boolean condition = validator.validateBook("Mouse",
+        Book newBook = new Book("Mouse",
                 new ArrayList<String>(Arrays.asList("Igor Kremov", "Max Belyash")), 700, 2015, 9000);
+        boolean condition = validator.validateBook(newBook);
         assertTrue(condition);
     }
 
     @Test
     public void validateBookTestInvalid() {
-        boolean condition = validator.validateBook("Mouse",
+        Book newBook = new Book("Mouse",
                 new ArrayList<String>(Arrays.asList("Igor Kremov", "Max Belyash")), -700, 2015, 9000);
+        boolean condition = validator.validateBook(newBook);
         assertFalse(condition);
     }
 

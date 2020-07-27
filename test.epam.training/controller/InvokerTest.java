@@ -2,7 +2,6 @@ package controller;
 
 import by.training.homework7.controller.Invoker;
 import by.training.homework7.exception.UserException;
-import model.BookLibraryDataTest;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -14,23 +13,22 @@ import java.util.Map;
 
 public class InvokerTest {
     Invoker invoker;
-    BookLibraryDataTest dataTest;
+
 
     @BeforeClass
     public void setUp() {
         invoker = Invoker.createInstance();
-        dataTest = BookLibraryDataTest.createInstance();
     }
 
     @Test
     public void processRequestTestValid() {
         Map<String, String> expected = new HashMap<>();
-        expected.put("SUCCESSFUL DELETING", "BOOK WAS DELETED");
+        expected.put("SUCCESSFUL ADDITION", "BOOK WAS ADDED");
 
-        int idToDelete = dataTest.takeBookLibraryTest().getBooks().get(0).getId();
-        String currentCommand = "delete_book";
+        String currentCommand = "add_book";
         try {
-            Map<String, String> actual = invoker.processRequest(currentCommand, Integer.toString(idToDelete));
+            Map<String, String> actual = invoker.processRequest(currentCommand,
+                    "Maybe to maybe", "Gero Sekond", "756", "1998", "34000");
             assertEquals(expected,actual);
         } catch (UserException exp) {
             fail("UserException..." + exp);
@@ -42,10 +40,10 @@ public class InvokerTest {
         Map<String, String> expected = new HashMap<>();
         expected.put("DELETING..", "DELETED..");
 
-        int idToDelete = dataTest.takeBookLibraryTest().getBooks().get(0).getId();
-        String currentCommand = "delete_book";
+        String currentCommand = "add_book";
         try {
-            Map<String, String> actual = invoker.processRequest(currentCommand, Integer.toString(idToDelete));
+            Map<String, String> actual = invoker.processRequest(currentCommand,
+                    "Maybe to maybe", "Gero Sekond", "756", "1998", "34000");
             assertNotEquals(expected,actual);
         } catch (UserException exp) {
             fail("UserException..." + exp);
@@ -60,6 +58,5 @@ public class InvokerTest {
     @AfterClass
     public void tierDown() {
         invoker = null;
-        dataTest = null;
     }
 }

@@ -58,7 +58,7 @@ public class AddBookCommand implements Command {
         for (int i = 1; i < parameters.length; i++) {
             char[] symbols = parameters[i].toCharArray();
             for (int j = 0; j < symbols.length; j++) {
-                if (!Character.isAlphabetic(symbols[j])) {
+                if ((!Character.isAlphabetic(symbols[j])) && !Character.isWhitespace(symbols[j])) {
                     return i;
                 }
             }
