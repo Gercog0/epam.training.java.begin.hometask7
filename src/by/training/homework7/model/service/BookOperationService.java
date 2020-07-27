@@ -6,7 +6,6 @@ import by.training.homework7.model.dao.impl.BookListDaoImpl;
 import by.training.homework7.model.entity.Book;
 import by.training.homework7.validator.BookValidator;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class BookOperationService {
@@ -22,22 +21,32 @@ public class BookOperationService {
         return instance;
     }
 
-    public void addBook(String title, ArrayList<String> authors,
-                        int quantityPages, int year, int price) throws ServiceException {
+    public boolean addBook(Book book) throws ServiceException {
         BookValidator validator = new BookValidator();
-        if (!validator.validateBook(title, authors, quantityPages, year, price)) {
+        if (!validator.validateBook(book)) {
             throw new ServiceException("Incorrect data...");
         }
-
-        Book newBook = new Book(title, authors, quantityPages, year, price);
+        boolean isAdd;
         try {
-            BookListDaoImpl.createInstance().add(newBook);
+            isAdd = BookListDaoImpl.createInstance().add(book);
         } catch (DaoException exp) {
             throw new ServiceException(exp);
         }
+        return isAdd;
     }
 
-
+    public boolean deleteBook(Book book) throws ServiceException {
+        if (book == null) {
+            throw new ServiceException("Incorrect data...");
+        }
+        boolean isDelete;
+        try {
+            isDelete = BookListDaoImpl.createInstance().delete(book);
+        } catch (DaoException exp) {
+            throw new ServiceException(exp);
+        }
+        return isDelete;
+    }
 
     public List<Book> searchByTag(Book.Tag tag, String search) throws ServiceException {
         BookValidator validator = new BookValidator();
@@ -50,6 +59,16 @@ public class BookOperationService {
         List<Book> books;
         try {
             books = BookListDaoImpl.createInstance().searchByTag(tag, search);
+        } catch (DaoException exp) {
+            throw new ServiceException(exp);
+        }
+        return books;
+    }
+
+    public List<Book> findAll() throws ServiceException {
+        List<Book> books;
+        try {
+            books = BookListDaoImpl.createInstance().findAll();
         } catch (DaoException exp) {
             throw new ServiceException(exp);
         }

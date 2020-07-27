@@ -1,7 +1,6 @@
 package model;
 
 import by.training.homework7.model.entity.Book;
-import by.training.homework7.model.entity.BookLibrary;
 
 import java.util.ArrayList;
 import java.util.Arrays;

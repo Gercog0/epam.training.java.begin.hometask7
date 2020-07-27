@@ -10,7 +10,7 @@ import java.util.Arrays;
 public class test {
     public static void main(String[] args) throws DaoException {
         BookListDaoImpl impl = BookListDaoImpl.createInstance();
-        System.out.println(impl.findAll());
+        System.out.println(impl.searchByTag(Book.Tag.PAGES, "1007"));
 
 
     }

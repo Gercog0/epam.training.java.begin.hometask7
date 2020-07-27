@@ -4,13 +4,11 @@ import by.training.homework7.exception.DaoException;
 import by.training.homework7.model.connection.SqlConnectionCreator;
 import by.training.homework7.model.dao.BookListDao;
 import by.training.homework7.model.entity.Book;
-import by.training.homework7.model.entity.BookLibrary;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class BookListDaoImpl implements BookListDao {
     private static BookListDaoImpl instance;
@@ -19,8 +17,9 @@ public class BookListDaoImpl implements BookListDao {
             "VALUES (?, ?, ?, ?, ?)";
     private static final String SQL_DELETE_BOOK = "DELETE FROM books WHERE title = ? AND " +
             "author = ? AND pages = ? AND year = ? AND price = ?";
-    private static final String SQL_FIND_ALL = "SELECT id, title, author, pages, year, price" +
+    private static final String SQL_FIND_ALL = "SELECT id, title, author, pages, year, price " +
             "FROM books";
+    private static final String SQL_SEARCH_BY_TAG = SQL_FIND_ALL + " WHERE ";
 
     private BookListDaoImpl() {
     }
@@ -61,18 +60,31 @@ public class BookListDaoImpl implements BookListDao {
             statement.setInt(5, book.getPrice());
             update = statement.executeUpdate() > 0;
         } catch (SQLException exp) {
-            throw new DaoException("The book wan not deleted...", exp);
+            throw new DaoException("The book was not deleted...", exp);
         }
         return update;
     }
 
     @Override
     public List<Book> searchByTag(Book.Tag tag, String string) throws DaoException {
-        List<Book> books = BookLibrary.createInstance().getBooks();
-        List<Book> foundBooks = books.stream().
-                filter(b -> b.getParameter(tag).contains(string)).collect(Collectors.toList());
-        if (foundBooks.isEmpty()) {
-            throw new DaoException("Nothing was found for the query...");
+        List<Book> foundBooks = new ArrayList<>();
+        try (Connection connection = SqlConnectionCreator.createConnection();
+             PreparedStatement statement = connection.prepareStatement(SQL_SEARCH_BY_TAG +
+                     tag.getName() + " = " + " '" + string + "'");
+             ResultSet resultSet = statement.executeQuery()) {
+            while (resultSet.next()) {
+                int id = resultSet.getInt(1);
+                String title = resultSet.getString(2);
+                String author = resultSet.getString(3);
+                int pages = resultSet.getInt(4);
+                int year = resultSet.getInt(5);
+                int price = resultSet.getInt(6);
+                foundBooks.add(new Book(id, title, new ArrayList<String>(Arrays.asList(author)),
+                        pages, year, price));
+            }
+
+        } catch (SQLException exp) {
+            throw new DaoException("Error when searching for books...", exp);
         }
         return foundBooks;
     }
@@ -90,7 +102,8 @@ public class BookListDaoImpl implements BookListDao {
                 int pages = resultSet.getInt(4);
                 int year = resultSet.getInt(5);
                 int price = resultSet.getInt(6);
-                foundBooks.add(new Book(id, title, new ArrayList<String>(Arrays.asList(author)), pages, year, price));
+                foundBooks.add(new Book(id, title, new ArrayList<String>(Arrays.asList(author)),
+                        pages, year, price));
             }
         } catch (SQLException exp) {
             throw new DaoException("Error when searching for books...", exp);

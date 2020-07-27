@@ -1,6 +1,5 @@
 package by.training.homework7.model.entity;
 
-import by.training.homework7.util.IdGenerator;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -16,7 +15,7 @@ public class Book extends Entity {
     private int price;
 
     public enum Tag {
-        ID("id"), TITLE("title"), AUTHORS("authors"),
+        ID("id"), TITLE("title"), AUTHORS("author"),
         PAGES("pages"), YEAR("year"), PRICE("price");
 
         private final String name;
@@ -84,31 +83,6 @@ public class Book extends Entity {
 
     public int getPrice() {
         return price;
-    }
-
-    public String getParameter(Tag parameter) {
-        String result = "";
-        switch (parameter) {
-            case ID:
-                result = Integer.toString(getId());
-                break;
-            case TITLE:
-                result = getTitle();
-                break;
-            case AUTHORS:
-                result = getAuthors().toString();
-                break;
-            case PAGES:
-                result = Integer.toString(getQuantityPages());
-                break;
-            case YEAR:
-                result = Integer.toString(getYear());
-                break;
-            case PRICE:
-                result = Integer.toString(getPrice());
-                break;
-        }
-        return result;
     }
 
     public void setAuthors(ArrayList<String> authors) {

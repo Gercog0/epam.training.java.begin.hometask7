@@ -3,6 +3,7 @@ package by.training.homework7.controller.command.impl;
 import by.training.homework7.controller.command.Command;
 import by.training.homework7.exception.ServiceException;
 import by.training.homework7.exception.UserException;
+import by.training.homework7.model.entity.Book;
 import by.training.homework7.model.service.BookOperationService;
 
 import java.util.ArrayList;
@@ -44,10 +45,11 @@ public class AddBookCommand implements Command {
         int price = Integer.parseInt(parameters[indexPages + 2]);
 
         try {
-            service.addBook(title, authors, pages, year, price);
+            Book newBook = new Book(title, authors, pages, year, price);
+            service.addBook(newBook);
             reply.put(SUCCESSFUL_REPLY, RESULT_REPLY);
         } catch (ServiceException exp) {
-            reply.put(exp.getMessage(), UNSUCCESSFUL_REPLY);
+            reply.put(UNSUCCESSFUL_REPLY, exp.getMessage());
         }
         return reply;
     }

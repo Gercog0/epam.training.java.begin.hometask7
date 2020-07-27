@@ -2,7 +2,7 @@ package by.training.homework7.validator;
 
 import by.training.homework7.model.entity.Book;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class BookValidator {
     private static final String SPACE = " ";
@@ -15,10 +15,10 @@ public class BookValidator {
     private static final int MIN_PRICE = 1;
     private static final int MAX_PRICE = 100000;
 
-    public boolean validateBook(String title, ArrayList<String> authors,
-                                int quantityPages, int year, int price) {
-        return validateTitle(title) && validateListAuthors(authors) &&
-                validateQuantityPages(quantityPages) && validateYear(year) && validatePrice(price);
+    public boolean validateBook(Book book) {
+        return validateTitle(book.getTitle()) && validateListAuthors(book.getAuthors()) &&
+                validateQuantityPages(book.getQuantityPages()) && validateYear(book.getYear()) &&
+                validatePrice(book.getPrice());
     }
 
     public boolean validateByTag(Book.Tag tag, String data) {
@@ -57,7 +57,7 @@ public class BookValidator {
         return result;
     }
 
-    public boolean validateListAuthors(ArrayList<String> authors) {
+    public boolean validateListAuthors(List<String> authors) {
         if (authors == null) {
             return false;
         }

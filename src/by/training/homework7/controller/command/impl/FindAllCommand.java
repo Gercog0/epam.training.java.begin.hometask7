@@ -7,28 +7,26 @@ import by.training.homework7.model.entity.Book;
 import by.training.homework7.model.service.BookOperationService;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
-public class DeleteBookCommand implements Command {
-    private static final int QUANTITY_PARAMETERS_TO_DELETE = 1;
-    private static final String SUCCESSFUL_REPLY = "SUCCESSFUL DELETING";
-    private static final String RESULT_REPLY = "BOOK WAS DELETED";
-    private static final String UNSUCCESSFUL_REPLY = "UNSUCCESSFUL DELETING";
+public class FindAllCommand implements Command {
+    private static final int QUANTITY_PARAMETERS_TO_FIND_ALL = 0;
+    private static final String SUCCESSFUL_REPLY = "SUCCESSFUL SEARCH";
+    private static final String UNSUCCESSFUL_REPLY = "UNSUCCESSFUL SEARCH";
 
     @Override
     public Map<String, String> execute(String... parameters) throws UserException {
-        if (parameters == null || parameters.length != QUANTITY_PARAMETERS_TO_DELETE) {
+        if (parameters == null || QUANTITY_PARAMETERS_TO_FIND_ALL != parameters.length) {
             throw new UserException("Incorrect data...");
         }
+
         BookOperationService service = BookOperationService.createInstance();
         Map<String, String> reply = new HashMap<>();
-
-        String bookId = parameters[0];
-
+        List<Book> foundBooks;
         try {
-            Book foundBook = service.searchByTag(Book.Tag.ID, bookId).get(0);
-            service.deleteBook(foundBook);
-            reply.put(SUCCESSFUL_REPLY, RESULT_REPLY);
+            foundBooks = service.findAll();
+            reply.put(SUCCESSFUL_REPLY, foundBooks.toString());
         } catch (ServiceException exp) {
             reply.put(UNSUCCESSFUL_REPLY, exp.getMessage());
         }
